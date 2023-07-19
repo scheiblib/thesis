@@ -1,4 +1,4 @@
-package sze.thesis.persistence;
+package sze.thesis.persistence.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
