@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "customer")
 @Data
@@ -35,4 +38,7 @@ public class Customer {
     private String city;
     @Column(name = "address", nullable = false)
     private String address;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<Cart> orders = new ArrayList<>();
 }

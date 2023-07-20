@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Data
 @Table(name = "item")
@@ -20,4 +23,7 @@ public class Item {
     private String type;
     private double size;
     private String colour;
+
+    @ManyToMany(mappedBy = "items")
+    private List<Cart> carts = new ArrayList<>();
 }
