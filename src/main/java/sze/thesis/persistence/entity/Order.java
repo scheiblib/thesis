@@ -8,18 +8,17 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
-@Table(name = "cart")
+@Table(name = "orders")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Cart {
+public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "cart_id")
-    private long cartId;
+    @Column(name = "order_id")
+    private long orderId;
 
     private String status;
 
@@ -28,11 +27,11 @@ public class Cart {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id")
-    private Customer customer;
+    private User user;
 
     @ManyToMany
-    @JoinTable(name = "cart_item",
-    joinColumns = @JoinColumn(name = "cart_id"),
+    @JoinTable(name = "order_item",
+    joinColumns = @JoinColumn(name = "order_id"),
     inverseJoinColumns = @JoinColumn(name = "item_id"))
     private List<Item> items = new ArrayList<>();
 }

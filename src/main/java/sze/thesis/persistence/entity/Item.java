@@ -27,5 +27,5 @@ public class Item {
     private double price;
 
     @ManyToMany(mappedBy = "items")
-    private List<Cart> carts = new ArrayList<>();
+    private List<Order> orders = new ArrayList<>();
 }
