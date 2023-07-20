@@ -24,6 +24,8 @@ public class Item {
     private double size;
     private String colour;
 
+    private double price;
+
     @ManyToMany(mappedBy = "items")
     private List<Cart> carts = new ArrayList<>();
 }
