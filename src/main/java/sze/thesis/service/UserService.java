@@ -9,6 +9,8 @@ import sze.thesis.persistence.entity.User;
 import sze.thesis.persistence.repository.UserRepository;
 import sze.thesis.service.mapper.UserMapper;
 
+import java.util.Optional;
+
 @Service
 public class UserService {
 
@@ -36,6 +38,11 @@ public class UserService {
         User user = userMapper.mapForUserRegister(createUserDto);
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         return userRepository.save(user);
+    }
+
+    public Optional<User> updateUserPersonalData(String email, CreateUserDto createUserDto) {
+        User maybeUser = userRepository.findByEmail(email);
+        return Optional.of(userRepository.save(updateUserPersonalData(maybeUser, createUserDto)));
     }
     private User updateUserPersonalData(User current, CreateUserDto createUserdto) {
         current.setFirstName(createUserdto.getFirstName());
