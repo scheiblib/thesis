@@ -9,6 +9,7 @@ import sze.thesis.persistence.entity.User;
 import sze.thesis.persistence.repository.UserRepository;
 import sze.thesis.service.mapper.UserMapper;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -28,6 +29,9 @@ public class UserService {
     public UserResponseDto findUserByEmail(String email){
         User maybeUser = userRepository.findByEmail(email);
         return userMapper.mapUserEntityToUserResponseDto(maybeUser);
+    }
+    public List<User> findAllUser(){
+        return userRepository.findAll();
     }
 
     public User registerUser(CreateUserDto createUserDto) throws Exception {

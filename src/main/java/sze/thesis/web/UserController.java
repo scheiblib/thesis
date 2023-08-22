@@ -6,7 +6,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import sze.thesis.model.CreateUserDto;
 import sze.thesis.model.UserResponseDto;
+import sze.thesis.persistence.entity.User;
 import sze.thesis.service.UserService;
+
+import java.util.List;
 
 @RestController
 @AllArgsConstructor
@@ -24,6 +27,10 @@ public class UserController {
     @ResponseStatus(HttpStatus.OK)
     public UserResponseDto findUserByEmail(@PathVariable("email") String email) {
         return userService.findUserByEmail(email);
+    }
+    @GetMapping("/findAllUser")
+    public List<User> findAll(){
+        return userService.findAllUser();
     }
 
     @PostMapping(path = "/register")
