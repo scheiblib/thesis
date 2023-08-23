@@ -1,34 +1,28 @@
 package sze.thesis.model;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import sze.thesis.persistence.entity.Item;
+import sze.thesis.persistence.entity.User;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-public class UserDto implements Serializable {
-
+public class OrderDto implements Serializable {
     @NotBlank
-    private String firstName;
-
+    private String status;
     @NotBlank
-    private String lastName;
-
+    private LocalDateTime createdAt;
     @NotBlank
-    @Email
-    private String email;
-
+    private User user;
     @NotBlank
-    private String phone;
-    @NotBlank
-    private String city;
-    @NotBlank
-    private String address;
+    private List<Item> items;
 }
