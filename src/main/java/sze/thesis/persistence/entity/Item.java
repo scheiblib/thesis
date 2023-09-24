@@ -26,6 +26,9 @@ public class Item {
 
     private double price;
 
+    @Column(name = "item_count")
+    private int itemCount;
+
     @ManyToMany(mappedBy = "items")
     private List<Order> orders = new ArrayList<>();
 }
