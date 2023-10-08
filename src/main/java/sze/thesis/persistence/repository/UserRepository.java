@@ -6,8 +6,10 @@ import sze.thesis.persistence.entity.User;
 import java.util.List;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    User findById(long id);
+    public User findById(long id);
 
-    User findByEmail(String email);
-    List<User> findAll();
+    public User findByEmail(String email);
+    public List<User> findAll();
+
+    public User findByUsername(String username);
 }

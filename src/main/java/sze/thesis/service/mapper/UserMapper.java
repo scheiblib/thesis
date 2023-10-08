@@ -1,5 +1,6 @@
 package sze.thesis.service.mapper;
 
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import sze.thesis.model.CreateUserDto;
 import sze.thesis.model.UserResponseDto;
@@ -17,6 +18,7 @@ public class UserMapper {
                 .firstName(createUserDto.getFirstName())
                 .lastName(createUserDto.getLastName())
                 .email(createUserDto.getEmail())
+                .username(createUserDto.getUsername())
                 .password(createUserDto.getPassword())
                 .phone(createUserDto.getPhone())
                 .city(createUserDto.getCity())
@@ -30,10 +32,11 @@ public class UserMapper {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
+                .username(user.getUsername())
                 .phone(user.getPhone())
                 .city(user.getCity())
                 .address(user.getAddress())
-//                .role(SecurityContextHolder.getContext().getAuthentication().getName().toUpperCase())
+                .role(SecurityContextHolder.getContext().getAuthentication().getName().toUpperCase())
                 .orders(user.getOrders())
                 .build();
     }

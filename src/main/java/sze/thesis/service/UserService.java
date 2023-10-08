@@ -1,6 +1,7 @@
 package sze.thesis.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import sze.thesis.model.CreateUserDto;
@@ -40,8 +41,9 @@ public class UserService {
             throw new Exception("Email address already in use.");
         }
         User user = userMapper.mapForUserRegister(createUserDto);
-        user.setPassword("asd");
-        return userRepository.save(user);
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        User userForSave = userRepository.save(user);
+        return userForSave;
     }
 
     public Optional<User> updateUserPersonalData(String email, CreateUserDto createUserDto) {

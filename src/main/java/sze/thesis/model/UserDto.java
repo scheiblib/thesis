@@ -26,6 +26,9 @@ public class UserDto implements Serializable {
     private String email;
 
     @NotBlank
+    private String username;
+
+    @NotBlank
     private String phone;
     @NotBlank
     private String city;
