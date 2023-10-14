@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sze.thesis.model.CreateUserDto;
 import sze.thesis.model.UserResponseDto;
@@ -25,9 +26,11 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public String registerUser(@Valid @RequestBody CreateUserDto createUserDto) throws Exception {
         service.addUser(createUserDto);
+        userService.registerUser(createUserDto);
         return "User added successfully!";
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @GetMapping("/findByUsername/{username}")
     @ResponseStatus(HttpStatus.OK)
     public List<UserRepresentation> getUser(@PathVariable("userName") String userName){
@@ -35,12 +38,14 @@ public class UserController {
         return user;
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PutMapping(path = "/update/{userId}")
     public String updateUser(@PathVariable("userId") String userId,   @RequestBody CreateUserDto userDTO){
         service.updateUser(userId, userDTO);
         return "User Details Updated Successfully.";
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @DeleteMapping(path = "/delete/{userId}")
     public String deleteUser(@PathVariable("userId") String userId){
         service.deleteUser(userId);
