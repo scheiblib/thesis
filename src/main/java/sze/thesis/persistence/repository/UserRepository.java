@@ -4,12 +4,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import sze.thesis.persistence.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    public User findById(long id);
+    Optional<User> findById(long id);
 
-    public User findByEmail(String email);
-    public List<User> findAll();
-
-    public User findByUsername(String username);
+    Optional<User> findByEmail(String email);
+    List<User> findAll();
 }

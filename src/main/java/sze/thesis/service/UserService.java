@@ -1,9 +1,11 @@
 package sze.thesis.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import sze.thesis.model.CreateUserDto;
 import sze.thesis.model.UserResponseDto;
 import sze.thesis.persistence.entity.User;
@@ -18,38 +20,39 @@ public class UserService {
 
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private UserMapper userMapper;
 
-    public UserResponseDto findUserById(long id){
-        User maybeUser = userRepository.findById(id);
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserResponseDto findUserById(long id) throws Exception {
+        User maybeUser = userRepository.findById(id)
+                .orElseThrow(() -> new Exception("User with " + id + " id not found"));
         return userMapper.mapUserEntityToUserResponseDto(maybeUser);
     }
 
-    public UserResponseDto findUserByEmail(String email){
-        User maybeUser = userRepository.findByEmail(email);
+    @PreAuthorize("hasRole('ADMIN')")
+    public UserResponseDto findUserByEmail(String email) throws Exception {
+        User maybeUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new Exception("User with " + email + " email address not found"));
         return userMapper.mapUserEntityToUserResponseDto(maybeUser);
     }
-    public List<User> findAllUser(){
-        return userRepository.findAll();
-    }
-
-    public User registerUser(CreateUserDto createUserDto) throws Exception {
-        String email = createUserDto.getEmail();
-        if(userRepository.findByEmail(email) != null){
-            throw new Exception("Email address already in use.");
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<UserResponseDto> findAllUser() throws Exception {
+        List<User> userList = userRepository.findAll();
+        if(userList != null) {
+            return userMapper.userResponseDtoList(userList);
+        } else {
+            throw new Exception("User list is empty.");
         }
-        User user = userMapper.mapForUserRegister(createUserDto);
-        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
-        User userForSave = userRepository.save(user);
-        return userForSave;
     }
 
-    public Optional<User> updateUserPersonalData(String email, CreateUserDto createUserDto) {
-        User maybeUser = userRepository.findByEmail(email);
+    @PreAuthorize("hasRole('USER')")
+    public Optional<User> updateUserPersonalData(String email, CreateUserDto createUserDto) throws Exception {
+        User maybeUser = userRepository.findByEmail(email)
+                .orElseThrow(() -> new Exception("User with " + email + " email address not found"));
         return Optional.of(userRepository.save(updateUserPersonalData(maybeUser, createUserDto)));
     }
+
     private User updateUserPersonalData(User current, CreateUserDto createUserdto) {
         current.setFirstName(createUserdto.getFirstName());
         current.setLastName(createUserdto.getLastName());
@@ -59,5 +62,4 @@ public class UserService {
         current.setAddress(createUserdto.getAddress());
         return current;
     }
-
 }

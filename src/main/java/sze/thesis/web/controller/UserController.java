@@ -1,15 +1,11 @@
 package sze.thesis.web.controller;
 
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import sze.thesis.model.CreateUserDto;
 import sze.thesis.model.UserResponseDto;
-import sze.thesis.persistence.entity.User;
-import sze.thesis.service.KeyCloakService;
 import sze.thesis.service.UserService;
 
 import java.util.List;
@@ -20,69 +16,21 @@ import java.util.List;
 public class UserController {
 
     private UserService userService;
-    private KeyCloakService service;
 
-    @PostMapping(path = "/register")
-    @ResponseStatus(HttpStatus.CREATED)
-    public String registerUser(@Valid @RequestBody CreateUserDto createUserDto) throws Exception {
-        service.addUser(createUserDto);
-        userService.registerUser(createUserDto);
-        return "User added successfully!";
-    }
-
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/findByUsername/{username}")
+    @GetMapping("/findUserByEmail/{email}")
     @ResponseStatus(HttpStatus.OK)
-    public List<UserRepresentation> getUser(@PathVariable("userName") String userName){
-        List<UserRepresentation> user = service.getUser(userName);
-        return user;
+    public UserResponseDto findUserByEmail(@PathVariable("email") String email) throws Exception {
+        return userService.findUserByEmail(email);
+    }
+    @GetMapping("/findAllUsers")
+    public List<UserResponseDto> findAll() throws Exception {
+        return userService.findAllUser();
     }
 
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @PutMapping(path = "/update/{userId}")
-    public String updateUser(@PathVariable("userId") String userId,   @RequestBody CreateUserDto userDTO){
-        service.updateUser(userId, userDTO);
-        return "User Details Updated Successfully.";
+    @PutMapping("/update/{email}")
+    @ResponseStatus(HttpStatus.OK)
+    public void updateUserPersonalData(@PathVariable("email") String email,
+                                       @RequestBody CreateUserDto createUserDto) throws Exception {
+            userService.updateUserPersonalData(email, createUserDto);
     }
-
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @DeleteMapping(path = "/delete/{userId}")
-    public String deleteUser(@PathVariable("userId") String userId){
-        service.deleteUser(userId);
-        return "User Deleted Successfully.";
-    }
-
-    @GetMapping(path = "/verification-link/{userId}")
-    public String sendVerificationLink(@PathVariable("userId") String userId){
-        service.sendVerificationLink(userId);
-        return "Verification Link Send to Registered E-mail Id.";
-    }
-
-    @GetMapping(path = "/reset-password/{userId}")
-    public String sendResetPassword(@PathVariable("userId") String userId){
-        service.sendResetPassword(userId);
-        return "Reset Password Link Send Successfully to Registered E-mail Id.";
-    }
-//    }
-//    @GetMapping("/findUserByEmail/{email}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public UserResponseDto findUserByEmail(@PathVariable("email") String email) {
-//        return userService.findUserByEmail(email);
-//    }
-//    @GetMapping("/findAllUser")
-//    public List<User> findAll(){
-//        return userService.findAllUser();
-//    }
-//
-//    @PostMapping(path = "/register")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public void registerUser(@Valid @RequestBody CreateUserDto createUserDto) throws Exception {
-//        userService.registerUser(createUserDto);
-//    }
-//    @PutMapping("/update/{email}")
-//    @ResponseStatus(HttpStatus.OK)
-//    public void updateUserPersonalData(@PathVariable("email") String email,
-//                                       @RequestBody CreateUserDto createUserDto) {
-//            userService.updateUserPersonalData(email, createUserDto);
-//    }
 }

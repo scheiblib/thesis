@@ -24,7 +24,7 @@ public class ItemController {
         return itemService.findItemById(id);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+
     @GetMapping("/findAll")
     public List<Item> findAll (){
         return itemService.findAll();

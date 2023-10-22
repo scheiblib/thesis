@@ -29,6 +29,10 @@ public class Item {
     @Column(name = "item_count")
     private int itemCount;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
+
     @ManyToMany(mappedBy = "items")
     private List<Order> orders = new ArrayList<>();
 }

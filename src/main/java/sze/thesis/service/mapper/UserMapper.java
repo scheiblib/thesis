@@ -8,7 +8,6 @@ import sze.thesis.persistence.entity.Role;
 import sze.thesis.persistence.entity.User;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -18,12 +17,11 @@ public class UserMapper {
                 .firstName(createUserDto.getFirstName())
                 .lastName(createUserDto.getLastName())
                 .email(createUserDto.getEmail())
-                .username(createUserDto.getUsername())
                 .password(createUserDto.getPassword())
                 .phone(createUserDto.getPhone())
                 .city(createUserDto.getCity())
                 .address(createUserDto.getAddress())
-                .roles(Collections.singleton(Role.USER))
+                .role(Role.USER)
                 .build();
     }
 
@@ -32,12 +30,10 @@ public class UserMapper {
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
-                .username(user.getUsername())
                 .phone(user.getPhone())
                 .city(user.getCity())
                 .address(user.getAddress())
-                .role(SecurityContextHolder.getContext().getAuthentication().getName().toUpperCase())
-                .orders(user.getOrders())
+                .role(Role.USER.toString())
                 .build();
     }
 
