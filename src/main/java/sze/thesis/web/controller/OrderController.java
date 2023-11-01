@@ -21,7 +21,7 @@ public class OrderController {
         return orderService.findLoggedInUserOrders();
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public Order getOrder(@PathVariable("id") long id) {
         return orderService.findOrderById(id);
     }
