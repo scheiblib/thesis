@@ -19,20 +19,10 @@ public class Item {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
     private long id;
-
     private String type;
     private double size;
     private String colour;
-
     private double price;
-
-    @Column(name = "item_count")
-    private int itemCount;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "cart_id")
-    private Cart cart;
-
     @ManyToMany(mappedBy = "items")
     private List<Order> orders = new ArrayList<>();
 }
