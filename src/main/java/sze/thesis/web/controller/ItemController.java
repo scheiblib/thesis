@@ -16,6 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequestMapping(path = "/api/items")
 public class ItemController {
+
     @Autowired
     private ItemService itemService;
 
@@ -23,7 +24,6 @@ public class ItemController {
     public Item findById(@PathVariable("id") long id){
         return itemService.findItemById(id);
     }
-
 
     @GetMapping("/findAll")
     public List<Item> findAll (){
