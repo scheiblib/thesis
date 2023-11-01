@@ -2,10 +2,11 @@ package sze.thesis.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sze.thesis.model.OrderDto;
 import sze.thesis.persistence.entity.Item;
 import sze.thesis.persistence.entity.Order;
+import sze.thesis.persistence.entity.OrderStatus;
 import sze.thesis.persistence.entity.User;
+import sze.thesis.persistence.repository.ItemRepository;
 import sze.thesis.persistence.repository.OrderRepository;
 
 import java.time.LocalDateTime;
@@ -21,30 +22,64 @@ public class OrderService {
     @Autowired
     private ItemService itemService;
 
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ItemRepository itemRepository;
+
     public Order findOrderById(long id){
         return orderRepository.findById(id);
+    }
+
+    public List<Order> findLoggedInUserOrders() {
+        User u = userService.getLoggedUser();
+        return u.getOrders();
+    }
+
+    public Order getPendingOrder(){
+        List<Order> allOrders = findLoggedInUserOrders();
+        Order pendingOrder = null;
+        for(Order o : allOrders){
+            if(o.getStatus().equals(OrderStatus.PENDING)){
+                pendingOrder = o;
+                break;
+            }
+        }
+        return pendingOrder;
     }
 
     public List<Order> findAll(){
         return orderRepository.findAll();
     }
 
-    public Order createOrder(User u){
-        return Order.builder().status("Függőben")
+    public Order createPendingOrder(){
+        return Order.builder()
+                .status(OrderStatus.PENDING)
                 .createdAt(LocalDateTime.now())
                 .items(new ArrayList<>())
-                .user(u)
+                .user(userService.getLoggedUser())
+                .totalPrice(0)
                 .build();
     }
-    public void addItemToOrder(long itemId, int count, User user){
+    public void addItemToOrder(long itemId){
+        Order pendingOrder = getPendingOrder() == null ? createPendingOrder() : getPendingOrder();
         Item item = itemService.findItemById(itemId);
-        for(Order order : user.getOrders()){
-            if(order.getStatus().equals("Függőben")){
-                order.getItems().add(item);
-            } else {
-                Order newOrder = createOrder(user);
-                newOrder.getItems().add(item);
-            }
+        User u = userService.getLoggedUser();
+        pendingOrder.setTotalPrice(pendingOrder.getTotalPrice() + item.getPrice());
+        pendingOrder.getItems().add(item);
+    }
+
+    public void deleteItemFromOrder(long itemId) throws Exception {
+        Order pendingOrder = getPendingOrder();
+        if (pendingOrder == null) {
+            throw new Exception("There is no pending order.");
         }
+        pendingOrder.setTotalPrice(pendingOrder.getTotalPrice() - itemRepository.findById(itemId).getPrice());
+        pendingOrder.getItems().remove(itemRepository.findById(itemId));
+    }
+    public Order placeOrder(){
+        Order orderToSend = getPendingOrder();
+        orderToSend.setStatus(OrderStatus.SENT);
+        return orderToSend;
     }
 }

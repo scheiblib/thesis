@@ -22,7 +22,10 @@ public class Order {
     @Column(name = "order_id")
     private long orderId;
 
-    private String status;
+    private OrderStatus status;
+
+    @Column(name = "total_price")
+    private double totalPrice;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
