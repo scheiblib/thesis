@@ -2,7 +2,7 @@ package sze.thesis.web.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
+
 import org.springframework.web.bind.annotation.*;
 import sze.thesis.model.CreateUserDto;
 import sze.thesis.model.UserResponseDto;
