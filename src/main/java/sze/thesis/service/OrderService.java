@@ -61,21 +61,23 @@ public class OrderService {
                 .totalPrice(0)
                 .build();
     }
-    public void addItemToOrder(long itemId){
+    public Order addItemToOrder(long itemId){
         Order pendingOrder = getPendingOrder() == null ? createPendingOrder() : getPendingOrder();
         Item item = itemService.findItemById(itemId);
         User u = userService.getLoggedUser();
         pendingOrder.setTotalPrice(pendingOrder.getTotalPrice() + item.getPrice());
         pendingOrder.getItems().add(item);
+        return pendingOrder;
     }
 
-    public void deleteItemFromOrder(long itemId) throws Exception {
+    public Order removeItemFromOrder(long itemId) throws Exception {
         Order pendingOrder = getPendingOrder();
         if (pendingOrder == null) {
             throw new Exception("There is no pending order.");
         }
         pendingOrder.setTotalPrice(pendingOrder.getTotalPrice() - itemRepository.findById(itemId).getPrice());
         pendingOrder.getItems().remove(itemRepository.findById(itemId));
+        return pendingOrder;
     }
     public Order placeOrder(){
         Order orderToSend = getPendingOrder();
