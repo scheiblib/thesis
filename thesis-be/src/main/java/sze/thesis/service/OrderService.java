@@ -32,8 +32,8 @@ public class OrderService {
     }
 
     public List<Order> findLoggedInUserOrders() {
-        User u = userService.getLoggedUser();
-        return u.getOrders();
+        User user = userService.getLoggedUser();
+        return user.getOrders();
     }
 
     public Order getPendingOrder(){
@@ -67,6 +67,7 @@ public class OrderService {
         User u = userService.getLoggedUser();
         pendingOrder.setTotalPrice(pendingOrder.getTotalPrice() + item.getPrice());
         pendingOrder.getItems().add(item);
+        orderRepository.save(pendingOrder);
         return pendingOrder;
     }
 
@@ -77,11 +78,13 @@ public class OrderService {
         }
         pendingOrder.setTotalPrice(pendingOrder.getTotalPrice() - itemRepository.findById(itemId).getPrice());
         pendingOrder.getItems().remove(itemRepository.findById(itemId));
+        orderRepository.save(pendingOrder);
         return pendingOrder;
     }
     public Order placeOrder(){
         Order orderToSend = getPendingOrder();
-        orderToSend.setStatus(OrderStatus.SENT);
+        orderToSend.setStatus(OrderStatus.valueOf("SENT"));
+        orderRepository.save(orderToSend);
         return orderToSend;
     }
 }

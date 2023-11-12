@@ -24,20 +24,19 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    @PreAuthorize("hasRole('ADMIN')")
     public UserResponseDto findUserById(long id) throws Exception {
         User maybeUser = userRepository.findById(id)
                 .orElseThrow(() -> new Exception("User with " + id + " id not found"));
         return userMapper.mapUserEntityToUserResponseDto(maybeUser);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+
     public UserResponseDto findUserByEmail(String email) throws Exception {
         User maybeUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new Exception("User with " + email + " email address not found"));
         return userMapper.mapUserEntityToUserResponseDto(maybeUser);
     }
-    @PreAuthorize("hasRole('ADMIN')")
+
     public List<UserResponseDto> findAllUser() throws Exception {
         List<User> userList = userRepository.findAll();
         if(userList != null) {
@@ -47,7 +46,6 @@ public class UserService {
         }
     }
 
-    @PreAuthorize("hasRole('USER')")
     public Optional<User> updateUserPersonalData(String email, CreateUserDto createUserDto) throws Exception {
         User maybeUser = userRepository.findByEmail(email)
                 .orElseThrow(() -> new Exception("User with " + email + " email address not found"));

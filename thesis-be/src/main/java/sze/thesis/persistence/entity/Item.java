@@ -23,6 +23,4 @@ public class Item {
     private double size;
     private String colour;
     private double price;
-    @ManyToMany(mappedBy = "items")
-    private List<Order> orders = new ArrayList<>();
 }

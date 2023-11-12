@@ -3,10 +3,7 @@ package sze.thesis.web.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sze.thesis.persistence.entity.Item;
 import sze.thesis.service.ItemService;
 
@@ -28,5 +25,10 @@ public class ItemController {
     @GetMapping("/findAll")
     public List<Item> findAll (){
         return itemService.findAll();
+    }
+
+    @PostMapping("/addItems")
+    public List<Item> addItems(@RequestBody List<Item> items) {
+        return itemService.addItems(items);
     }
 }

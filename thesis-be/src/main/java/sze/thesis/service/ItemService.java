@@ -21,4 +21,9 @@ public class ItemService {
     public List<Item> findAll(){
         return itemRepository.findAll();
     }
+
+    public List<Item> addItems(List<Item> items) {
+        itemRepository.saveAll(items);
+        return findAll();
+    }
 }
