@@ -31,7 +31,7 @@ public class OrderController {
         return orderService.findAll();
     }
 
-    @PatchMapping("/addItem/{id}")
+    @PutMapping("/addItem/{id}")
     public Order addItem(@PathVariable("id") long id) {
         return orderService.addItemToOrder(id);
     }
